@@ -6,6 +6,7 @@ import './App.css'
 import KuromojiTokenizer from './tokenizer/KuromojiTokenizer.ts'
 import { useEffect } from 'react'
 import { Input } from "@/components/ui/input"
+import { CornerDownLeft } from 'lucide-react'
 
 
 function App() {
@@ -43,7 +44,15 @@ function App() {
   return (
     <>
       <div className="flex flex-col mx-auto my-10 max-w-1/2">
-        <Input onChange={inputChange} />
+
+        <div className="relative">
+          <Input onChange={inputChange} className='focus-visible:ring-2 focus-visible:ring-gray-600' />
+          <div className='absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600' >
+            <CornerDownLeft strokeWidth={2} size={20} />
+          </div>
+
+        </div>
+
         <p>{text}</p>
 
 
