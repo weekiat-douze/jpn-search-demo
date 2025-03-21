@@ -56,8 +56,8 @@ function App() {
       <div className="grid grid-cols-1 justify-items-center gap-40">
         <div className='flex flex-wrap items-end gap-5 max-w-3/4'>
           {
-            words.map(word => {
-              return <WordBlock word={word} />
+            words.map((word, i) => {
+              return <WordBlock key={i} word={word} />
             })
           }
         </div>
@@ -72,8 +72,8 @@ function App() {
 
         <div className='flex flex-col md:text-xl gap-4 items-start'>
           {
-            sentences.map(sentence => {
-              return <p className='text-slate-600'>{sentence}</p>
+            sentences.map((sentence, i) => {
+              return <p key={i} className='text-slate-600'>{sentence}</p>
             })
           }
         </div>
