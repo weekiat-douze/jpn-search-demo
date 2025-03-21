@@ -7,6 +7,7 @@ import KuromojiTokenizer from './tokenizer/KuromojiTokenizer.ts'
 import { useEffect } from 'react'
 import { Input } from "@/components/ui/input"
 import { CornerDownLeft } from 'lucide-react'
+import Header from './components/my-components/header.tsx'
 
 
 function App() {
@@ -36,24 +37,27 @@ function App() {
     const nihongo = event.target.value;
     // console.log("Nihongo", nihongo);
     const path = tokenizer.tokenize(nihongo);
-    // console.log("Hello", path)
+    console.log("Hello", path)
     setText(JSON.stringify(path))
   }
 
 
   return (
     <>
-      <div className="flex flex-col mx-auto my-10 max-w-1/2">
 
-        <div className="relative">
+      <Header />
+      <div className="grid grid-cols-1 justify-items-center gap-40">
+        <div className="relative mx-auto min-w-1/2">
           <Input onChange={inputChange} className='focus-visible:ring-2 focus-visible:ring-gray-600' />
           <div className='absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600' >
             <CornerDownLeft strokeWidth={2} size={20} />
           </div>
-
         </div>
 
-        <p>{text}</p>
+        <div className='inline-block max-w-3/4'>
+          <p>{text}</p>
+        </div>
+
 
 
       </div>
