@@ -10,7 +10,7 @@
 
 @theme {
   --font-notosans: "Noto Sans", sans-serif;
-  --font-ibmplexmono: "IBM Plex Mono", sans-serif;
+  --font-ibmplexmono: "IBM Plex Mono", monospace;
 }
 
 @layer base {
