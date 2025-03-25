@@ -1,30 +1,37 @@
 import Word from "@/types/word";
+import { AnimatePresence, motion } from "motion/react";
 
-
-export default function FilterList({ sentences, filter }: { sentences: Word[][], filter: Set<number> }) {
-
+export default function FilterList({ sentences, filter, searchWord }: { sentences: Word[][], filter: Set<number>, searchWord: Word[] }) {
 
     return <>
-        <div className='flex flex-col md:text-xl gap-4 items-start'>
+        <motion.div
+            initial={{ y: 500 }}
+            animate={{ y: 0 }}
+            exit={{ y: 500 }}
+            className='flex flex-col md:text-xl gap-4 items-center w-9/10 m-auto'>
+            <AnimatePresence mode="popLayout">
 
-            {
-                filter.size === 0 ? sentences.map((sentence, i) => {
-                    const joinedSentence = sentence.reduce((joined, word) => {
-                        return joined + word.surface_form;
-                    }, "");
-                    return <p key={i} className='text-slate-600'>{joinedSentence}</p>
 
-                })
-                    : sentences.filter((sentence, i) => {
-                        return filter.has(i);
+                {
+                    sentences.filter((sentence, i) => {
+                        return searchWord.length === 0 || filter.has(i);
                     }).map((sentence, i) => {
                         const joinedSentence = sentence.reduce((joined, word) => {
                             return joined + word.surface_form;
                         }, "");
-                        return <p key={i} className='text-slate-600'>{joinedSentence}</p>
+                        return <motion.div
+                            layout
+                            key={joinedSentence}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                        // transition={{ type: "spring" }}
+                        >
+                            <p className='text-slate-600'>{joinedSentence}</p>
+                        </motion.div>
                     })
-            }
-        </div>
+                }
+            </AnimatePresence>
+        </motion.div>
 
 
     </>;

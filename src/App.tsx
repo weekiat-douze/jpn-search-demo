@@ -14,13 +14,14 @@ import FilterList from './components/my-components/filter-list.tsx'
 import { searchPreprocessing, searchText } from './components/my-components/search-processor.ts'
 
 const sentences: string[] = [
-  "回り出したあの子と僕の未来が",
-  "大丈夫よ私は最強",
-  "動物は基本群れるものである",
-  "私を雇ってもらえませんか",
-  "こんにちは、私はミラーです",
-  "もしも相手が絶対かなわない様な強敵だとしても　勝とうとしなきゃ勝てないよ",
-  "いいじゃないか 偽物の勇者で。僕は魔王を倒して世界の平和を取り戻す。そうすれば偽物だろうが本物だろうが関係ない",
+  "今日と明日の天気予報を調べる方法を知りたい。",
+  "現在地から近くのカフェを探してみよう。",
+  "東京でおすすめの観光名所や人気スポットを知りたい。",
+  "予算内で泊まれる安いホテルを検索する。",
+  "初心者向けの日本語の勉強方法を教えてください。",
+  "最新のニュースや今日の重要な話題を確認する。",
+  "今年の人気アニメランキングを見たい。",
+  "今乗る電車の時刻表や運行情報をチェックする。"
 ];
 
 function App() {
@@ -86,7 +87,7 @@ function App() {
         </div>
 
 
-        <FilterList sentences={listSentences} filter={filter} />
+        <FilterList sentences={listSentences} filter={filter} searchWord={searchWords} />
 
 
 
