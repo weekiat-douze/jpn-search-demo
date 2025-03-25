@@ -13,9 +13,9 @@ export default function FilterList({ sentences, filter, searchWord }: { sentence
 
 
                 {
-                    sentences.filter((sentence, i) => {
+                    sentences.filter((_, i) => {
                         return searchWord.length === 0 || filter.has(i);
-                    }).map((sentence, i) => {
+                    }).map((sentence) => {
                         const joinedSentence = sentence.reduce((joined, word) => {
                             return joined + word.surface_form;
                         }, "");
