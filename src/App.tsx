@@ -67,7 +67,7 @@ function App() {
     <>
 
       <Header />
-      <div className="grid grid-cols-1 justify-items-center gap-36">
+      <div className="grid grid-cols-1 justify-items-center gap-14 md:gap-36">
         <div className='flex flex-wrap items-end gap-5 max-w-3/4 min-h-[44px]'>
           {
             searchWords.map((word, i) => {
