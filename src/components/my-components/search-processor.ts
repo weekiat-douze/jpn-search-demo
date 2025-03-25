@@ -67,3 +67,47 @@ function readingIndexing(sentences: Word[][]) {
     }
     return map;
 }
+
+export function searchText(generalIndex: Map<string, number[]>, readingIndex: Map<string, number[]>, searchWords: Word[]) {
+
+    const removedSearchWords = stopWordRemoval(searchWords);
+    const set = new Set<number>();
+
+    for (let i = 0; i < removedSearchWords.length; i++) {
+        const word = removedSearchWords[i];
+        const allHiragana = word.basic_form.split("").reduce((isHiragana, char) => {
+            return isHiragana && (/^[\u3040-\u309F]$/.test(char))
+        }, true);
+        const allKatakana = word.basic_form.split("").reduce((isHiragana, char) => {
+            return isHiragana && (/^[\u30A0-\u30FF]$/.test(char))
+        }, true);
+
+        if (allHiragana && readingIndex.has(word.reading)) { // For Hiragana Search
+
+            const indexArr = readingIndex.get(word.reading);
+            if (indexArr) {
+                for (let i = 0; i < indexArr.length; i++) {
+                    set.add(indexArr[i])
+                }
+            }
+        }
+        if ((allKatakana || word.basic_form == "*") && readingIndex.has(word.surface_form)) { // For Katakana Search
+            console.log("entered");
+            const indexArr = readingIndex.get(word.surface_form);
+            if (indexArr) {
+                for (let i = 0; i < indexArr.length; i++) {
+                    set.add(indexArr[i])
+                }
+            }
+        }
+        if (generalIndex.has(word.basic_form)) { // Standard Case with Kanji
+            const indexArr = generalIndex.get(word.basic_form);
+            if (indexArr) {
+                for (let i = 0; i < indexArr.length; i++) {
+                    set.add(indexArr[i])
+                }
+            }
+        }
+    }
+    return set;
+}
