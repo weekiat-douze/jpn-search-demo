@@ -6,12 +6,14 @@ import './App.css'
 import KuromojiTokenizer from './tokenizer/KuromojiTokenizer.ts'
 import { useEffect } from 'react'
 import { Input } from "@/components/ui/input"
-import { CornerDownLeft } from 'lucide-react'
+import { CloudDownload, CornerDownLeft, } from 'lucide-react'
 import Header from './components/my-components/header.tsx'
 import Word from './types/word.ts'
 import WordBlock from './components/my-components/word-block.tsx'
 import FilterList from './components/my-components/filter-list.tsx'
 import { searchPreprocessing, searchText } from './components/my-components/search-processor.ts'
+import { Alert, AlertDescription, AlertTitle } from './components/ui/alert.tsx'
+import { AnimatePresence, motion } from 'motion/react';
 
 const sentences: string[] = [
   "今日と明日の天気予報を調べる方法を知りたい。",
@@ -25,6 +27,8 @@ const sentences: string[] = [
 ];
 
 function App() {
+  const [isLoading, setLoading] = useState<boolean>(true);
+
   const [searchWords, setSearchWords] = useState<Word[]>([]);
   const [listSentences, setSentences] = useState<Word[][]>([])
 
@@ -44,6 +48,7 @@ function App() {
       setReadingIndex(readingIndex);
       setGeneralIndex(generalIndex);
       setSentences(processed);
+      setLoading(false);
     }
 
     asyncFunction()
@@ -93,6 +98,26 @@ function App() {
 
 
       </div>
+      <AnimatePresence>
+        {
+          isLoading
+            ? <motion.div className='w-sm fixed bottom-5 right-5'
+              layout
+              key={"alert"}
+              initial={{ y: 30 }} animate={{ y: 0 }} exit={{ opacity: 0, y: 50 }}>
+              <Alert >
+                <CloudDownload strokeWidth={2.5} />
+                <AlertTitle>Hold on...</AlertTitle>
+                <AlertDescription>
+                  Loading dictionary may take awhile
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+            : <></>
+        }
+      </AnimatePresence>
+
+
     </>
   )
 }
