@@ -92,7 +92,7 @@ export function searchText(generalIndex: Map<string, number[]>, readingIndex: Ma
             }
         }
         if ((allKatakana || word.basic_form == "*") && readingIndex.has(word.surface_form)) { // For Katakana Search
-            console.log("entered");
+
             const indexArr = readingIndex.get(word.surface_form);
             if (indexArr) {
                 for (let i = 0; i < indexArr.length; i++) {
