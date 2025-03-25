@@ -10,42 +10,46 @@ import { CornerDownLeft } from 'lucide-react'
 import Header from './components/my-components/header.tsx'
 import Word from './types/word.ts'
 import WordBlock from './components/my-components/word-block.tsx'
+import FilterList from './components/my-components/filter-list.tsx'
 
 const sentences: string[] = [
   "回り出したあの子と僕の未来が",
   "大丈夫よ私は最強",
   "動物は基本群れるものである",
+  "私を雇ってもらえませんか",
+  "こんにちは、私はミラーです",
 ];
 
 function App() {
   // const [count, setCount] = useState(0)
-  const [words, setWords] = useState<Word[]>([]);
+  const [searchWords, setSearchWords] = useState<Word[]>([]);
 
-  // useEffect(() => {
-  //   const asyncFunction = async () => {
+  const [listSentences, setSentences] = useState<Word[][]>([])
 
-  //     const tokenizer = await KuromojiTokenizer()
-  //     const nihongo = "わたしを雇ってください"
-  //     const path = tokenizer.tokenize(nihongo);
-  //     // console.log(path)
-  //     // console.log("HAR SEMO")
-  //     setText(JSON.stringify(path))
-  //   }
+  useEffect(() => {
+    const asyncFunction = async () => {
 
-  //   asyncFunction()
+      const tokenizer = await KuromojiTokenizer()
+      const processed = sentences.map(sentence => {
+        const result = tokenizer.tokenize(sentence)
+        return (result as Word[]);
+      })
+      setSentences(processed);
+    }
+
+    asyncFunction()
 
 
-  // }, [])
+  }, []);
+
 
   const inputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 
-
     const tokenizer = await KuromojiTokenizer()
     const nihongo = event.target.value;
-    // console.log("Nihongo", nihongo);
     const path = tokenizer.tokenize(nihongo);
-    console.log("Hello", path)
-    setWords(path as Word[])
+    setSearchWords(path as Word[])
+
   }
 
 
@@ -53,10 +57,10 @@ function App() {
     <>
 
       <Header />
-      <div className="grid grid-cols-1 justify-items-center gap-40">
-        <div className='flex flex-wrap items-end gap-5 max-w-3/4'>
+      <div className="grid grid-cols-1 justify-items-center gap-36">
+        <div className='flex flex-wrap items-end gap-5 max-w-3/4 min-h-[44px]'>
           {
-            words.map((word, i) => {
+            searchWords.map((word, i) => {
               return <WordBlock key={i} word={word} />
             })
           }
@@ -70,13 +74,16 @@ function App() {
           </div>
         </div>
 
-        <div className='flex flex-col md:text-xl gap-4 items-start'>
+
+        <FilterList sentences={listSentences} searchWords={searchWords} />
+
+        {/* <div className='flex flex-col md:text-xl gap-4 items-start'>
           {
             sentences.map((sentence, i) => {
               return <p key={i} className='text-slate-600'>{sentence}</p>
             })
           }
-        </div>
+        </div> */}
 
 
 
