@@ -1,4 +1,5 @@
 import Word from "@/types/word";
+import { textPath } from "motion/react-client";
 import StopWords from 'stopwords-ja';
 
 const CustomStopWords = StopWords.filter(word => {
@@ -110,4 +111,48 @@ export function searchText(generalIndex: Map<string, number[]>, readingIndex: Ma
         }
     }
     return set;
+}
+
+export function widerSearchText(generalIndex: Map<string, number[]>, readingIndex: Map<string, number[]>, searchWords: Word[]) {
+    const removedSearchWords = stopWordRemoval(searchWords);
+    let set = new Set<number>();
+
+    for (const key of generalIndex.keys()) {
+        if (keySearchWords(key, removedSearchWords)) {
+            const indexArr = generalIndex.get(key);
+            const tempSet = new Set<number>(indexArr);
+            set = new Set<number>([...set, ...tempSet])
+        }
+    }
+    for (const key of readingIndex.keys()) {
+        if (keySearchWords(key, removedSearchWords)) {
+            const indexArr = readingIndex.get(key);
+            const tempSet = new Set<number>(indexArr);
+            set = new Set<number>([...set, ...tempSet])
+        }
+    }
+    return set;
+}
+
+function keySearchWords(key: string, searchWords: Word[]) {
+    for (let i = 0; i < searchWords.length; i++) {
+        const word = searchWords[i];
+
+        const allHiragana = word.basic_form.split("").reduce((isHiragana, char) => {
+            return isHiragana && (/^[\u3040-\u309F]$/.test(char))
+        }, true);
+        const allKatakana = word.basic_form.split("").reduce((isHiragana, char) => {
+            return isHiragana && (/^[\u30A0-\u30FF]$/.test(char))
+        }, true);
+
+        if (key.includes(word.basic_form)) {
+            return true;
+        }
+        if ((allKatakana || word.basic_form == "*") && key.includes(word.surface_form)) {
+            return true
+        }
+        if (allHiragana && key.includes(word.reading)) {
+            return true
+        }
+    }
 }
