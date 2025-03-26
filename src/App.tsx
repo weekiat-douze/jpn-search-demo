@@ -82,7 +82,7 @@ function App() {
         </div>
 
 
-        <div className="relative mx-auto min-w-1/2"> {/* Input Field section */}
+        <div className="relative mx-auto min-w-3/4 lg:min-w-1/2"> {/* Input Field section */}
           <Input onChange={inputChange}
             placeholder='Search Japanese Text'
             className='focus-visible:ring-2 focus-visible:ring-gray-600' />

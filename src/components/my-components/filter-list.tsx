@@ -26,7 +26,7 @@ export default function FilterList({ sentences, filter, searchWord }: { sentence
                             exit={{ scale: 0.8, opacity: 0 }}
                         // transition={{ type: "spring" }}
                         >
-                            <p className='text-slate-600'>{joinedSentence}</p>
+                            <p className='text-slate-600 text-sm sm:text-lg'>{joinedSentence}</p>
                         </motion.div>
                     })
                 }
