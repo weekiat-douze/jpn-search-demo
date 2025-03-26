@@ -16,7 +16,7 @@ export default function Header() {
                 </a>
 
             </div>
-            <a href="https://github.com/weekiat-douze/jpn-search-demo" className="hover:text-slate-500">
+            <a href="https://github.com/weekiat-douze/jpn-search-demo" className="hover:text-slate-500 w-fit">
                 <div className="flex gap-1">
                     <Github />
                     <p className="font-ibmplexmono">jpn-search-demo</p>
