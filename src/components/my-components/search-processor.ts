@@ -1,5 +1,4 @@
 import Word from "@/types/word";
-import { textPath } from "motion/react-client";
 import StopWords from 'stopwords-ja';
 
 const CustomStopWords = StopWords.filter(word => {
