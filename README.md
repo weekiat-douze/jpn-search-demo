@@ -5,7 +5,7 @@ Utilises Morphological Analyzers and Full-Text Search techniques.
 
 [Demo hosted on github pages](https://weekiat-douze.github.io/jpn-search-demo/)
 
-Write Up: [Japanese Language Search](https://www.weekiat-douze.com/blog/jpn-search-demo)
+Write Up: [A Study In Japanese Language Search](https://www.weekiat-douze.com/blog/jpn-search-demo)
 
 ### Tech Stack
 
