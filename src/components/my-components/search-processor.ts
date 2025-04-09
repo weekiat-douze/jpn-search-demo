@@ -14,7 +14,9 @@ export function searchPreprocessing(sentences: Word[][]) {
     // })
     const generalIndex = generalIndexing(sentences_p1);
     const readingIndex = readingIndexing(sentences_p1);
-    return { generalIndex, readingIndex }
+    const widerGeneralIndex = widerGeneralIndexing(sentences_p1);
+    const widerReadingIndex = widerReadingIndexing(sentences_p1);
+    return { generalIndex, readingIndex, widerGeneralIndex, widerReadingIndex }
 }
 
 // function stemming(sentence: Word[]) {
@@ -27,6 +29,57 @@ export function stopWordRemoval(sentence: Word[]): Word[] {
     return sentence.filter(word => {
         return (word.pos != "句点" && word.pos != "空白" && word.pos != "記号") && !CustomStopWords.includes(word.basic_form);
     })
+}
+
+function widerGeneralIndexing(sentences: Word[][]) {
+    const map: Map<string, number[]> = new Map();
+    for (let i = 0; i < sentences.length; i++) {
+        const sentence = sentences[i];
+        for (const word of sentence) {
+            const base_word = word.basic_form;
+
+            for (let start = 0; start < base_word.length; start++) {
+                for (let end = start + 1; end < base_word.length + 1; end++) {
+                    const substring = base_word.substring(start, end);
+                    if (map.has(substring)) {
+                        const list = map.get(substring);
+                        if (list?.indexOf(i) === -1) {
+                            list.push(i);
+                        }
+                    } else {
+                        map.set(substring, [i]);
+                    }
+                }
+            }
+
+        }
+    }
+    return map;
+}
+
+function widerReadingIndexing(sentences: Word[][]) {
+    const map: Map<string, number[]> = new Map();
+    for (let i = 0; i < sentences.length; i++) {
+        const sentence = sentences[i];
+        for (const word of sentence) {
+            const reading = word.reading;
+            for (let start = 0; start < reading.length; start++) {
+                for (let end = start + 1; end < reading.length + 1; end++) {
+                    const substring = reading.substring(start, end);
+                    if (map.has(substring)) {
+                        const list = map.get(substring);
+                        if (list?.indexOf(i) === -1) {
+                            list.push(i);
+                        }
+                    } else {
+                        map.set(substring, [i]);
+                    }
+                }
+            }
+
+        }
+    }
+    return map;
 }
 
 function generalIndexing(sentences: Word[][]) {
@@ -82,7 +135,9 @@ export function searchText(generalIndex: Map<string, number[]>, readingIndex: Ma
             return isHiragana && (/^[\u30A0-\u30FF]$/.test(char))
         }, true);
 
+
         if (allHiragana && readingIndex.has(word.reading)) { // For Hiragana Search
+
 
             const indexArr = readingIndex.get(word.reading);
             if (indexArr) {
@@ -112,46 +167,46 @@ export function searchText(generalIndex: Map<string, number[]>, readingIndex: Ma
     return set;
 }
 
-export function widerSearchText(generalIndex: Map<string, number[]>, readingIndex: Map<string, number[]>, searchWords: Word[]) {
-    const removedSearchWords = stopWordRemoval(searchWords);
-    let set = new Set<number>();
+// export function widerSearchText(generalIndex: Map<string, number[]>, readingIndex: Map<string, number[]>, searchWords: Word[]) {
+//     const removedSearchWords = stopWordRemoval(searchWords);
+//     let set = new Set<number>();
 
-    for (const key of generalIndex.keys()) {
-        if (keySearchWords(key, removedSearchWords)) {
-            const indexArr = generalIndex.get(key);
-            const tempSet = new Set<number>(indexArr);
-            set = new Set<number>([...set, ...tempSet])
-        }
-    }
-    for (const key of readingIndex.keys()) {
-        if (keySearchWords(key, removedSearchWords)) {
-            const indexArr = readingIndex.get(key);
-            const tempSet = new Set<number>(indexArr);
-            set = new Set<number>([...set, ...tempSet])
-        }
-    }
-    return set;
-}
+//     for (const key of generalIndex.keys()) {
+//         if (keySearchWords(key, removedSearchWords)) {
+//             const indexArr = generalIndex.get(key);
+//             const tempSet = new Set<number>(indexArr);
+//             set = new Set<number>([...set, ...tempSet])
+//         }
+//     }
+//     for (const key of readingIndex.keys()) {
+//         if (keySearchWords(key, removedSearchWords)) {
+//             const indexArr = readingIndex.get(key);
+//             const tempSet = new Set<number>(indexArr);
+//             set = new Set<number>([...set, ...tempSet])
+//         }
+//     }
+//     return set;
+// }
 
-function keySearchWords(key: string, searchWords: Word[]) {
-    for (let i = 0; i < searchWords.length; i++) {
-        const word = searchWords[i];
+// function keySearchWords(key: string, searchWords: Word[]) {
+//     for (let i = 0; i < searchWords.length; i++) {
+//         const word = searchWords[i];
 
-        const allHiragana = word.basic_form.split("").reduce((isHiragana, char) => {
-            return isHiragana && (/^[\u3040-\u309F]$/.test(char))
-        }, true);
-        const allKatakana = word.basic_form.split("").reduce((isHiragana, char) => {
-            return isHiragana && (/^[\u30A0-\u30FF]$/.test(char))
-        }, true);
+//         const allHiragana = word.basic_form.split("").reduce((isHiragana, char) => {
+//             return isHiragana && (/^[\u3040-\u309F]$/.test(char))
+//         }, true);
+//         const allKatakana = word.basic_form.split("").reduce((isHiragana, char) => {
+//             return isHiragana && (/^[\u30A0-\u30FF]$/.test(char))
+//         }, true);
 
-        if (key.includes(word.basic_form)) {
-            return true;
-        }
-        if ((allKatakana || word.basic_form == "*") && key.includes(word.surface_form)) {
-            return true
-        }
-        if (allHiragana && key.includes(word.reading)) {
-            return true
-        }
-    }
-}
+//         if (key.includes(word.basic_form)) {
+//             return true;
+//         }
+//         if ((allKatakana || word.basic_form == "*") && key.includes(word.surface_form)) {
+//             return true
+//         }
+//         if (allHiragana && key.includes(word.reading)) {
+//             return true
+//         }
+//     }
+// }

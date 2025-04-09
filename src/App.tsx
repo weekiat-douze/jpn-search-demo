@@ -11,7 +11,7 @@ import Header from './components/my-components/header.tsx'
 import Word from './types/word.ts'
 import WordBlock from './components/my-components/word-block.tsx'
 import FilterList from './components/my-components/filter-list.tsx'
-import { searchPreprocessing, searchText, widerSearchText } from './components/my-components/search-processor.ts'
+import { searchPreprocessing, searchText } from './components/my-components/search-processor.ts'
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert.tsx'
 import { AnimatePresence, motion } from 'motion/react';
 import { Checkbox } from './components/ui/checkbox.tsx'
@@ -36,6 +36,8 @@ function App() {
 
   const [stateReadingIndex, setReadingIndex] = useState<Map<string, number[]>>(new Map());
   const [stateGeneralIndex, setGeneralIndex] = useState<Map<string, number[]>>(new Map());
+  const [stateWiderGeneralIndex, setWiderGeneralIndex] = useState<Map<string, number[]>>(new Map());
+  const [stateWiderReadingIndex, setWiderReadingIndex] = useState<Map<string, number[]>>(new Map());
   const [filter, setFilter] = useState<Set<number>>(new Set());
 
   useEffect(() => {
@@ -46,9 +48,13 @@ function App() {
         const result = tokenizer.tokenize(sentence)
         return (result as Word[]);
       })
-      const { generalIndex, readingIndex } = searchPreprocessing(processed);
+      const { generalIndex, readingIndex, widerGeneralIndex, widerReadingIndex } = searchPreprocessing(processed);
+
       setReadingIndex(readingIndex);
       setGeneralIndex(generalIndex);
+      setWiderReadingIndex(widerReadingIndex);
+      setWiderGeneralIndex(widerGeneralIndex);
+
       setSentences(processed);
       setLoading(false);
     }
@@ -69,7 +75,8 @@ function App() {
 
 
     if (checked) {
-      const tempFilter = widerSearchText(stateGeneralIndex, stateReadingIndex, (path as Word[]));
+      const tempFilter = searchText(stateWiderGeneralIndex, stateWiderReadingIndex, (path as Word[]));
+
       setFilter(tempFilter);
     } else {
       const tempFilter = searchText(stateGeneralIndex, stateReadingIndex, (path as Word[]));
@@ -81,10 +88,12 @@ function App() {
 
   const checkChanged = async () => {
     if (!checked) {
-      const tempFilter = widerSearchText(stateGeneralIndex, stateReadingIndex, searchWords);
+      const tempFilter = searchText(stateWiderGeneralIndex, stateWiderReadingIndex, searchWords);
+
       setFilter(tempFilter);
     } else {
       const tempFilter = searchText(stateGeneralIndex, stateReadingIndex, searchWords);
+
       setFilter(tempFilter);
     }
     setChecked(!checked);
